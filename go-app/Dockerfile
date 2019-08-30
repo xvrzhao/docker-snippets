@@ -16,6 +16,9 @@ ADD . .
 RUN go build -o /app/bin/app main.go
 
 FROM alpine:3.10
+# Timezone setting for Alpine: UTC -> CST
+RUN apk add --no-cache tzdata \
+    && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 COPY --from=builder /app/bin/app /
 EXPOSE 8080
 ENTRYPOINT ["/app"]
