@@ -13,7 +13,7 @@ RUN go mod download
 # from the above 3 lines so if in case of that, the work
 # of rebuild just begain in next line.
 ADD . .
-RUN go build -o /app/bin/app main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/bin/app main.go
 
 FROM alpine:3.10
 # Timezone setting for Alpine: UTC -> CST
