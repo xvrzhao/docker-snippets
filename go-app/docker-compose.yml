@@ -2,15 +2,34 @@ version: "3"
 
 services:
 
+    db:
+        image: mysql:8.0.17
+        command:
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_general_ci
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        volumes:
+            - db:/var/lib/mysql
+        restart: always
+
     webapp:
+        depends_on:
+            - db
         build:
             context: .
             dockerfile: webapp.Dockerfile
+        restart: always
 
     proxy:
+        depends_on:
+            - webapp
         build:
             context: .
             dockerfile: nginx.Dockerfile
         ports:
             - "80"
-        
+        restart: always
+
+volumes:
+    db:
