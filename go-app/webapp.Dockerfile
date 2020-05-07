@@ -4,8 +4,7 @@ WORKDIR /app/src
 # The purpose of the following 3 lines is to 
 # use cache to avoid downloading dependencies 
 # again if the go.mod and go.sum not be modified.
-COPY ./go.mod ./
-COPY ./go.sum ./
+COPY ./go.mod ./go.sum ./
 RUN go mod download
 # In most cases we rebuild the image just because of
 # that we modifed the source code but not changed
