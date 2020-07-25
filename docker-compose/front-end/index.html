@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Counter</title>
+</head>
+<body>
+<div id="app">
+    <p>{{count}}</p>
+    <button id="add-button" @click="addCount">add</button>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            count: 0
+        },
+        created() {
+            this.getCount()
+        },
+        methods: {
+            getCount() {
+                this.getRequest().then(res => {
+                    this.count = res.data.value
+                })
+            },
+            addCount() {
+                this.addRequest().then(res => {
+                    if (res.data.value === true) {
+                        this.count++
+                    }
+                })
+            },
+            getRequest() {
+                return axios.get('/api/count')
+            },
+            addRequest() {
+                return axios.post('/api/count')
+            }
+        }
+    })
+</script>
+</html>
