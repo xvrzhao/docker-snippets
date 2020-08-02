@@ -15,7 +15,7 @@ graph LR
     B1 & B2 & B3 --> R[(redis_1)]
 ```
 
-## 命令
+## 常用命令
 
 ```bash
 # 启动
@@ -39,6 +39,9 @@ docker-compose up -d --scale {SERVICE}={NUMBER}
 # 实时查看日志
 docker-compose logs -f [SERVICE...]
 
+# 停止容器并移除容器、网络和镜像
+docker-compose down --rmi local
+
 # ...
 ```
 
@@ -46,4 +49,4 @@ docker-compose logs -f [SERVICE...]
 
 以本 demo 为例，back-end scale 为多实例之后，其他容器可直接通过 back-end 为 hostname 进行访问，内部会做域名解析，将请求负载均衡到 back-end 多个实例上。
 
-但需要注意的是，本 demo 中，back-end scale 之后，前面的 nginx gateway 需要重启才能有效地将流量负载到新的多实例上。
+但需要注意的是，本 demo 中，back-end scale 之后，前面的 nginx gateway 需要重启才能有效地将流量负载均衡到新的多实例上。
