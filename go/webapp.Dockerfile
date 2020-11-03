@@ -1,5 +1,5 @@
 FROM golang:alpine AS builder
-RUN go env -w GO111MODULE=on && go env -w GOPROXY=https://goproxy.cn,direct
+RUN go env -w GO111MODULE=on GOPROXY=https://goproxy.cn,direct
 WORKDIR /app/src
 # The purpose of the following 3 lines is to 
 # use cache to avoid downloading dependencies 
@@ -12,13 +12,14 @@ RUN go mod download
 # from the above 3 lines so if in case of that, the work
 # of rebuild just begain in next line.
 COPY ./ ./
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/bin/app main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/bin/app .
 
 FROM alpine
 # Timezone setting for Alpine: UTC -> CST
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
-    && apk add --no-cache tzdata \
-    && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+    && apk add tzdata \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && apk del tzdata
 COPY --from=builder /app/bin/app /
 EXPOSE 8080
 ENTRYPOINT ["/app"]
